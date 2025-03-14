@@ -1,20 +1,21 @@
 // Sidebar.tsx
-import {
-  Box,
-  VStack,
-  Heading,
-  Link,
-  Flex,
-  Icon,
-  Button,
-  Text,
-} from '@chakra-ui/react';
+import { Box, VStack, Heading, Link, Flex, Icon, Text } from '@chakra-ui/react';
 import { Divider } from '@/components/ui/divider';
 import { Avatar } from '@/components/ui/avatar';
 
 import { FiUsers, FiTv, FiLogOut } from 'react-icons/fi';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+
+const flexItemProps = {
+  p: 3,
+  cursor: 'pointer',
+  _dark: { _hover: { bg: 'gray.900' } },
+  _hover: { bg: 'gray.200' },
+  fontWeight: 'medium',
+  align: 'center',
+  borderRadius: 'lg',
+};
 
 const Sidebar = () => {
   const { logout, user } = useAuth();
@@ -87,18 +88,11 @@ const Sidebar = () => {
             gap={2}
             p={2}
             mt="auto"
-            bg="gray.50"
+            bg="gray.100"
             borderRadius="lg"
             _dark={{ bg: 'gray.800' }}
           >
-            <Flex
-              fontWeight="medium"
-              p={3}
-              align="center"
-              cursor={'pointer'}
-              borderRadius="lg"
-              _dark={{ _hover: { bg: 'gray.900' } }}
-            >
+            <Flex {...flexItemProps}>
               <Avatar
                 size={'xs'}
                 name={user?.username}
@@ -107,16 +101,7 @@ const Sidebar = () => {
               />
               <Text>{user?.username}</Text>
             </Flex>
-
-            <Flex
-              onClick={handleLogout}
-              p={3}
-              cursor={'pointer'}
-              _dark={{ _hover: { bg: 'gray.900' } }}
-              fontWeight="medium"
-              align="center"
-              borderRadius="lg"
-            >
+            <Flex onClick={handleLogout} {...flexItemProps}>
               <FiLogOut />
               <Text ml={2}>Logout</Text>
             </Flex>

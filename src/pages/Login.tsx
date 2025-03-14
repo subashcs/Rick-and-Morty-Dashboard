@@ -7,13 +7,14 @@ import {
   Button,
   Stack,
   Box,
-  Avatar,
   Field,
   Icon,
 } from '@chakra-ui/react';
 import { FaUserAlt, FaLock, FaEyeSlash, FaEye } from 'react-icons/fa';
 import { toaster } from '@/components/ui/toaster';
+import { Avatar } from '@/components/ui/avatar';
 import { useAuth } from '../context/AuthContext';
+import { ColorModeButton } from '@/components/ui/color-mode';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -62,11 +63,9 @@ const Login = () => {
       justifyContent="center"
       alignItems="center"
     >
+      <ColorModeButton position="absolute" top={4} right={4} />
+
       <Stack alignItems="center">
-        <Avatar.Root variant={'solid'}>
-          <Avatar.Fallback name="Segun Adebayo" />
-        </Avatar.Root>
-        <Heading color="blue.500">Welcome Back</Heading>
         <Box
           w={{ base: '90%', md: '400px' }}
           bg="white"
@@ -75,6 +74,18 @@ const Login = () => {
           boxShadow="lg"
           p={8}
         >
+          <Flex alignItems="center" justifyContent={'flex-start'} mb={2}>
+            <Avatar
+              variant={'solid'}
+              mr={4}
+              name="Rick and Morty API Dashboard"
+            />
+            <Heading>Rick and Morty Dashboard</Heading>
+          </Flex>
+          <Heading size="sm" mb={8} fontWeight={'normal'}>
+            Welcome ! Login to view dashboard
+          </Heading>
+
           <form onSubmit={handleSubmit}>
             <Stack gap="8" maxW="md">
               <Field.Root invalid={!!error} required orientation={'vertical'}>

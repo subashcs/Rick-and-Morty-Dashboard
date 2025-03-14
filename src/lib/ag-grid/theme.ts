@@ -1,31 +1,40 @@
 import { themeQuartz } from 'ag-grid-community';
 
-export const tableTheme = themeQuartz.withParams({
+// Common theme properties
+const commonTheme = {
+  fontFamily: {
+    googleFont: 'Avenir',
+  },
+  fontSize: 16,
+  rowHeight: 60,
+  headerVerticalPaddingScale: 0.9,
+  sidePanelBorder: false,
+  wrapperBorder: false,
+  wrapperBorderRadius: 0,
+};
+
+// Dark Theme
+export const tableThemeDark = themeQuartz.withParams({
+  ...commonTheme,
   accentColor: '#15BDE8',
   backgroundColor: 'var(--chakra-colors-gray-800)',
-  borderColor: '#ffffff00',
-  borderRadius: 20,
+  borderColor: '#ffffff0f',
+  borderRadius: 10,
   browserColorScheme: 'dark',
   cellHorizontalPaddingScale: 1,
   chromeBackgroundColor: {
     ref: 'backgroundColor',
   },
   columnBorder: false,
-  fontFamily: {
-    googleFont: 'Avenir',
-  },
-  fontSize: 16,
   foregroundColor: '#BBBEC9',
   headerBackgroundColor: '#111111',
-  headerFontSize: 14,
   headerFontWeight: 500,
   headerTextColor: '#FFFFFF',
-  headerVerticalPaddingScale: 0.9,
-  iconSize: 20,
-  rowBorder: false,
-  rowVerticalPaddingScale: 1.2,
-  sidePanelBorder: false,
-  spacing: 8,
-  wrapperBorder: false,
-  wrapperBorderRadius: 0,
+});
+
+// Light Theme
+export const tableThemeLight = themeQuartz.withParams({
+  ...commonTheme,
+  browserColorScheme: 'light',
+  backgroundColor: 'var(--chakra-colors-gray-50)',
 });

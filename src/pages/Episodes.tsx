@@ -4,13 +4,16 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef, GridReadyEvent, IGetRowsParams } from 'ag-grid-community';
 import { useLazyQuery } from '@apollo/client';
 import { GetEpisodesDocument } from '@/gql/graphql';
-import { tableTheme } from '@/lib/ag-grid/theme';
+import { tableThemeLight, tableThemeDark } from '@/lib/ag-grid/theme';
+import { useColorMode } from '@/components/ui/color-mode';
 
 const PAGE_SIZE = 20;
 
 const Episodes = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [gridApi, setGridApi] = useState<any>(null);
+  const { colorMode } = useColorMode();
+  const tableTheme = colorMode === 'light' ? tableThemeLight : tableThemeDark;
 
   const [fetchEpisodes] = useLazyQuery(GetEpisodesDocument, {
     fetchPolicy: 'network-only',
@@ -18,19 +21,17 @@ const Episodes = () => {
 
   const columnDefs = useMemo<ColDef[]>(
     () => [
-      { field: 'name', sortable: true, filter: true, flex: 1 },
+      { field: 'name', filter: true, flex: 1 },
       { field: 'air_date', headerName: 'Air Date', sortable: true, width: 150 },
       {
         field: 'episode',
         headerName: 'Episode Code',
-        sortable: true,
         width: 130,
       },
       {
         headerName: 'Characters',
         field: 'characterCount',
         valueGetter: (params) => params.data.characters?.length,
-        sortable: true,
         width: 120,
       },
     ],

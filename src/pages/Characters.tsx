@@ -5,12 +5,15 @@ import { type ColDef, type GridReadyEvent } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { VStack, Box, Heading, HStack, Field, Input } from '@chakra-ui/react';
 import { GetCharactersDocument } from '@/gql/graphql';
-import { tableTheme } from '@/lib/ag-grid/theme';
+import { tableThemeDark, tableThemeLight } from '@/lib/ag-grid/theme';
+import { useColorMode } from '@/components/ui/color-mode';
 
 const Characters = () => {
-  const [fetchCharacters] = useLazyQuery(GetCharactersDocument);
+  const [fetchCharacters, { loading }] = useLazyQuery(GetCharactersDocument);
   const [allData, setAllData] = useState<any[]>([]);
   const [gridApi, setGridApi] = useState<any>(null);
+  const { colorMode } = useColorMode();
+  const tableTheme = colorMode === 'light' ? tableThemeLight : tableThemeDark;
 
   // Fetch all characters from the API
   useEffect(() => {
@@ -137,7 +140,7 @@ const Characters = () => {
   const onFilterTextBoxChanged: React.ChangeEventHandler<HTMLInputElement> = (
     e
   ) => {
-    gridApi!.setGridOption('quickFilterText', e.target.value);
+    gridApi.setGridOption('quickFilterText', e.target.value);
   };
 
   // Handle grid ready event
@@ -191,6 +194,7 @@ const Characters = () => {
           rowBuffer={0}
           onGridReady={onGridReady}
           theme={tableTheme}
+          loading={loading}
         />
       </Box>
     </VStack>
