@@ -15,6 +15,7 @@ import { toaster } from '@/components/ui/toaster';
 import { Avatar } from '@/components/ui/avatar';
 import { useAuth } from '../context/AuthContext';
 import { ColorModeButton } from '@/components/ui/color-mode';
+import Sitemark from '@/components/Sitemark';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -74,15 +75,8 @@ const Login = () => {
           boxShadow="lg"
           p={8}
         >
-          <Flex alignItems="center" justifyContent={'flex-start'} mb={2}>
-            <Avatar
-              variant={'solid'}
-              mr={4}
-              name="Rick and Morty API Dashboard"
-            />
-            <Heading>Rick and Morty Dashboard</Heading>
-          </Flex>
-          <Heading size="sm" mb={8} fontWeight={'normal'}>
+          <Sitemark />
+          <Heading size="xs" mb={8} mt={2} fontWeight={'normal'}>
             Welcome ! Login to view dashboard
           </Heading>
 

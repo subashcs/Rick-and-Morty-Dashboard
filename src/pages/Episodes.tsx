@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Box, Heading, Input, VStack, Field } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import { AgGridReact } from 'ag-grid-react';
 import {
   ColDef,
@@ -11,6 +11,7 @@ import { useLazyQuery } from '@apollo/client';
 import { GetEpisodesDocument } from '@/gql/graphql';
 import { tableThemeLight, tableThemeDark } from '@/lib/ag-grid/theme';
 import { useColorMode } from '@/components/ui/color-mode';
+import PageSearchBox from '@/components/PageSearchBox';
 
 const PAGE_SIZE = 20;
 
@@ -120,36 +121,17 @@ const Episodes = () => {
 
   return (
     <VStack gap={6} align="stretch">
-      <Box
-        bg="white"
-        p={6}
-        borderRadius="xl"
-        shadow="sm"
-        _dark={{ bg: 'gray.800' }}
-      >
-        <Heading size="lg" color="blue.500">
-          Episodes
-        </Heading>
-
-        <Field.Root orientation="horizontal">
-          <Field.Label>Search</Field.Label>
-          <Input
-            placeholder="Search by episode name..."
-            value={searchTerm}
-            _dark={{ bg: 'gray.700' }}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              gridApi.setGridOption('datasource', {
-                getRows: getRowsFunction(e.target.value),
-              });
-            }}
-            flex={1}
-          />
-        </Field.Root>
-      </Box>
+      <PageSearchBox
+        title="Episodes"
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          gridApi.setGridOption('datasource', {
+            getRows: getRowsFunction(e.target.value),
+          });
+        }}
+      />
 
       <Box
-        className="ag-theme-alpine"
         height="600px"
         bg="white"
         borderRadius="xl"

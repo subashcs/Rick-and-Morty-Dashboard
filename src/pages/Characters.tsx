@@ -8,10 +8,11 @@ import {
   type GridReadyEvent,
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-import { VStack, Box, Heading, HStack, Field, Input } from '@chakra-ui/react';
+import { VStack, Box } from '@chakra-ui/react';
 import { Character, GetCharactersDocument } from '@/gql/graphql';
 import { tableThemeDark, tableThemeLight } from '@/lib/ag-grid/theme';
 import { useColorMode } from '@/components/ui/color-mode';
+import PageSearchBox from '@/components/PageSearchBox';
 
 const Characters = () => {
   const [fetchCharacters, { loading }] = useLazyQuery(GetCharactersDocument);
@@ -161,33 +162,7 @@ const Characters = () => {
 
   return (
     <VStack gap={6} align="stretch">
-      <Box
-        bg="white"
-        p={6}
-        borderRadius="xl"
-        shadow="sm"
-        _dark={{ bg: 'gray.800' }}
-      >
-        <VStack gap={6} align="stretch">
-          <Heading size="lg" color="blue.500">
-            Characters
-          </Heading>
-
-          <HStack gap={4} wrap="wrap">
-            <Field.Root orientation={'horizontal'}>
-              <Field.Label>Search</Field.Label>
-              <Input
-                placeholder="Search by name..."
-                onChange={onFilterTextBoxChanged}
-                width="300px"
-                bg="white"
-                _dark={{ bg: 'gray.700' }}
-                flex={1}
-              />
-            </Field.Root>
-          </HStack>
-        </VStack>
-      </Box>
+      <PageSearchBox onChange={onFilterTextBoxChanged} title="Characters" />
 
       <Box
         height="600px"

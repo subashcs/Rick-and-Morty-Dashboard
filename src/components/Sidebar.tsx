@@ -1,5 +1,4 @@
-// Sidebar.tsx
-import { Box, VStack, Heading, Link, Flex, Icon, Text } from '@chakra-ui/react';
+import { Box, VStack, Link, Flex, Icon, Text } from '@chakra-ui/react';
 import { Divider } from '@/components/ui/divider';
 import { Avatar } from '@/components/ui/avatar';
 
@@ -8,19 +7,45 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const flexItemProps = {
+  gap: 3,
   p: 3,
   cursor: 'pointer',
+  align: 'center',
   _dark: { _hover: { bg: 'gray.900' } },
   _hover: { bg: 'gray.200' },
   fontWeight: 'medium',
-  align: 'center',
   borderRadius: 'lg',
 };
 
-const Sidebar = () => {
+type SidebarProps = {
+  collapsed?: boolean;
+};
+
+const menus = [
+  {
+    path: '/characters',
+    title: 'Characters',
+    icon: FiUsers,
+  },
+  {
+    path: '/episodes',
+    title: 'Episodes',
+    icon: FiTv,
+  },
+];
+
+const mobileOnlyStyle = {
+  position: 'absolute',
+  top: '70px',
+  bottom: '0',
+};
+const desktopStyle = {
+  position: 'static',
+};
+
+const Sidebar = ({ collapsed = false }: SidebarProps) => {
   const { logout, user } = useAuth();
   const location = useLocation();
-
   const handleLogout = () => {
     logout();
     window.location.href = '/login'; // Redirect to login page after logout
@@ -28,54 +53,37 @@ const Sidebar = () => {
 
   return (
     <Box
-      w="250px"
-      bg="var(--chakra-colors-bg-surface)"
+      w={collapsed ? '0px' : 'full'}
+      zIndex={20}
+      lg={{ w: collapsed ? '95px' : '250px', ...desktopStyle }}
+      bg="var(--chakra-colors-bg)"
       borderRight="1px"
-      borderColor="var(--chakra-colors-border-subtle)"
-      p={5}
+      borderColor="var(--chakra-colors-border)"
       shadow="sm"
+      overflow="hidden"
+      transition={'width 0.4s ease-in-out'}
+      {...mobileOnlyStyle}
     >
-      <VStack gap={8} align="stretch" h="full">
-        {/* Header */}
-        <Heading size="md" color="blue.500">
-          Rick & Morty Dashboard
-        </Heading>
-
+      <VStack p={5} gap={8} align="stretch" h="full">
         {/* Navigation Links */}
         <VStack gap={2} align="stretch">
-          <Link
-            as={RouterLink}
-            to="/characters"
-            p={3}
-            borderRadius="lg"
-            bg={
-              location.pathname === '/characters' ? 'blue.500' : 'transparent'
-            }
-            color={location.pathname === '/characters' ? 'white' : 'inherit'}
-            _hover={{ bg: 'blue.400', color: 'white' }}
-            transition="all 0.2s"
-          >
-            <Flex align="center" gap={3}>
-              <Icon as={FiUsers} boxSize={5} />
-              Characters
-            </Flex>
-          </Link>
-
-          <Link
-            as={RouterLink}
-            to="/episodes"
-            p={3}
-            borderRadius="lg"
-            bg={location.pathname === '/episodes' ? 'blue.500' : 'transparent'}
-            color={location.pathname === '/episodes' ? 'white' : 'inherit'}
-            _hover={{ bg: 'blue.400', color: 'white' }}
-            transition="all 0.2s"
-          >
-            <Flex align="center" gap={3}>
-              <Icon as={FiTv} boxSize={5} />
-              Episodes
-            </Flex>
-          </Link>
+          {menus.map((item) => (
+            <Link
+              key={item.title}
+              as={RouterLink}
+              to={item.path}
+              borderRadius="lg"
+              bg={location.pathname === item.path ? 'blue.500' : 'transparent'}
+              color={location.pathname === item.path ? 'white' : 'inherit'}
+              _hover={{ bg: 'blue.400', color: 'white' }}
+              transition="all 0.2s"
+            >
+              <Flex align="center" justify="center" gap={3} p={3}>
+                <Icon as={item.icon} boxSize={7} p={1} />
+                <Text hidden={collapsed}>{item.title}</Text>
+              </Flex>
+            </Link>
+          ))}
         </VStack>
 
         {/* Divider */}
@@ -86,25 +94,29 @@ const Sidebar = () => {
           <Flex
             direction={'column'}
             gap={2}
-            p={2}
             mt="auto"
             bg="gray.100"
             borderRadius="lg"
             _dark={{ bg: 'gray.800' }}
           >
-            <Flex {...flexItemProps}>
-              <Avatar
-                size={'xs'}
-                name={user?.username}
-                src="https://bit.ly/sage-adebayo"
-                mr={2}
-              />
-              <Text>{user?.username}</Text>
-            </Flex>
-            <Flex onClick={handleLogout} {...flexItemProps}>
-              <FiLogOut />
-              <Text ml={2}>Logout</Text>
-            </Flex>
+            <Box>
+              <Flex {...flexItemProps}>
+                <Avatar
+                  name={user?.username}
+                  src="https://bit.ly/sage-adebayo"
+                  objectFit={'cover'}
+                  boxSize={7}
+                />
+
+                {!collapsed && <Text>{user?.username}</Text>}
+              </Flex>
+            </Box>
+            <Box>
+              <Flex onClick={handleLogout} {...flexItemProps}>
+                <Icon as={FiLogOut} boxSize={7} p={1} />
+                {!collapsed && <Text>Logout</Text>}
+              </Flex>
+            </Box>
           </Flex>
         </Flex>
       </VStack>

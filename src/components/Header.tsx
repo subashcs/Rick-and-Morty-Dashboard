@@ -1,15 +1,24 @@
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import { ColorModeButton } from '@/components/ui/color-mode';
 import { FiMenu } from 'react-icons/fi';
+import Sitemark from './Sitemark';
 
-const Header = () => {
+type HeaderProps = {
+  onMenuToggle: () => void;
+};
+
+const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   return (
-    <Box p={4} bg="gray.100" _dark={{ bg: 'gray.800', color: 'white' }}>
+    <Box py={4} px={2} bg="gray.100" _dark={{ bg: 'gray.800', color: 'white' }}>
       <Flex justify="space-between">
         {/* Add menu button toggler for mobile view here */}
-        <Button variant="ghost">
-          <FiMenu />
-        </Button>
+        <Flex alignItems="center" justifyContent="center">
+          <Button variant="ghost" onClick={onMenuToggle}>
+            <FiMenu />
+          </Button>
+          {/* Header */}
+          <Sitemark />
+        </Flex>
         <ColorModeButton title="Toggle Mode" />
       </Flex>
     </Box>
