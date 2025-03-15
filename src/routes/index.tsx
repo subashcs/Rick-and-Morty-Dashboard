@@ -17,7 +17,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
       <Route
         path="/"
         element={
@@ -30,6 +29,7 @@ const AppRoutes = () => {
         <Route path="characters" element={<Characters />} />
         <Route path="episodes" element={<Episodes />} />
       </Route>
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 };

@@ -1,17 +1,19 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { User, AuthContextType } from '../types/auth';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  const storedUser = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user') as string)
+    : null;
+  const [user, setUser] = useState<User | null>(storedUser);
 
   const login = async (username: string, password: string) => {
     // Mock authentication - in real app, this would be an API call
@@ -42,4 +44,4 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}; 
+};
