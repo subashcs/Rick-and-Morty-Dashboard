@@ -10,9 +10,25 @@ This is a UI implementation using the Rick and Morty GraphQL API. The project le
 - **Ag-Grid-React**: A feature-rich data grid supporting major JavaScript frameworks.
 - **Apollo GraphQL Client**: A comprehensive state management library for JavaScript that enables you to manage both local and remote data with GraphQL.
 
+## Node JS
+
+Check `.nvmrc` for Node JS version
+
 ## Testing
 
 Testing is configured with **Vitest** to ensure reliability and maintainability of the codebase.
+
+1. **Run tests**:
+
+   ```bash
+   yarn run test
+   yarn run test:watch
+   ```
+
+2. **Check test coverage**:
+   ```bash
+   yarn run coverage
+   ```
 
 ## Getting Started
 
@@ -22,54 +38,43 @@ To get the project up and running, follow these steps:
 
    ```bash
    git clone <repository-url>
-   cd rick-morty-dashboard
+   cd Rick-and-Morty-Dashboard
    ```
 
 2. **Install dependencies**:
 
    ```bash
-   npm install
+   yarn
    ```
 
 3. **Generate code from GraphQL schema**:
 
    ```bash
-   npm run codegen
+   yarn run codegen
    ```
 
    For development, we can use command:
 
    ```bash
-   npm run codegen --watch
+   yarn run codegen --watch
    ```
 
 4. **Run the development server**:
 
    ```bash
-   npm run dev
+   yarn run dev
    ```
 
 5. **Build the project for production**:
 
    ```bash
-   npm run build
+   yarn run build
    ```
 
 6. **Preview the production build**:
 
    ```bash
-   npm run preview
-   ```
-
-7. **Run tests**:
-
-   ```bash
-   npm run test
-   ```
-
-8. **Check test coverage**:
-   ```bash
-   npm run coverage
+   yarn run preview
    ```
 
 By following these steps, you will be able to set up the project environment and explore the features of the Rick and Morty API Dashboard.
