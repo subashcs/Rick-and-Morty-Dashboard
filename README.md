@@ -1,54 +1,75 @@
-# React + TypeScript + Vite
+# Rick and Morty API Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a UI implementation using the Rick and Morty GraphQL API. The project leverages modern technologies such as Vite for build tooling, Chakra UI for component styling, React for building the user interface, Ag-Grid-React for advanced data grid features, and Apollo GraphQL client for data fetching.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vite**: Fast and optimized development build setup.
+- **Chakra UI**: Provides a set of accessible and reusable React components.
+- **React**: A JavaScript library for building user interfaces.
+- **Ag-Grid-React**: A feature-rich data grid supporting major JavaScript frameworks.
+- **Apollo GraphQL Client**: A comprehensive state management library for JavaScript that enables you to manage both local and remote data with GraphQL.
 
-## Expanding the ESLint configuration
+## Testing
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Testing is configured with **Vitest** to ensure reliability and maintainability of the codebase.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Getting Started
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+To get the project up and running, follow these steps:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone the repository**:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+   ```bash
+   git clone <repository-url>
+   cd rick-morty-dashboard
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Generate code from GraphQL schema**:
+
+   ```bash
+   npm run codegen
+   ```
+
+   For development, we can use command:
+
+   ```bash
+   npm run codegen --watch
+   ```
+
+4. **Run the development server**:
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Build the project for production**:
+
+   ```bash
+   npm run build
+   ```
+
+6. **Preview the production build**:
+
+   ```bash
+   npm run preview
+   ```
+
+7. **Run tests**:
+
+   ```bash
+   npm run test
+   ```
+
+8. **Check test coverage**:
+   ```bash
+   npm run coverage
+   ```
+
+By following these steps, you will be able to set up the project environment and explore the features of the Rick and Morty API Dashboard.
