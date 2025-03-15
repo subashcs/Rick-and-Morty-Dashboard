@@ -68,6 +68,7 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
             <Link
               key={item.title}
               as={RouterLink}
+              //@ts-expect-error need to extend Router Link props with Chakra Link Props
               to={item.path}
               borderRadius="lg"
               bg={location.pathname === item.path ? 'blue.500' : 'transparent'}
