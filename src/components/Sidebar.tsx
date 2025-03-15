@@ -17,6 +17,19 @@ const flexItemProps = {
   borderRadius: 'lg',
 };
 
+const boxProps = {
+  bg: 'var(--chakra-colors-bg)',
+  borderRight: '1px',
+  borderColor: 'var(--chakra-colors-border)',
+  shadow: 'sm',
+  overflow: 'hidden',
+  transition: 'width 0.4s ease-in-out',
+  position: 'fixed',
+  top: '70px',
+  bottom: '0',
+  zIndex: 20,
+};
+
 type SidebarProps = {
   collapsed?: boolean;
 };
@@ -34,15 +47,6 @@ const menus = [
   },
 ];
 
-const mobileOnlyStyle = {
-  position: 'absolute',
-  top: '70px',
-  bottom: '0',
-};
-const desktopStyle = {
-  position: 'static',
-};
-
 const Sidebar = ({ collapsed = false }: SidebarProps) => {
   const { logout, user } = useAuth();
   const location = useLocation();
@@ -53,16 +57,9 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
 
   return (
     <Box
+      {...boxProps}
       w={collapsed ? '0px' : 'full'}
-      zIndex={20}
-      lg={{ w: collapsed ? '95px' : '250px', ...desktopStyle }}
-      bg="var(--chakra-colors-bg)"
-      borderRight="1px"
-      borderColor="var(--chakra-colors-border)"
-      shadow="sm"
-      overflow="hidden"
-      transition={'width 0.4s ease-in-out'}
-      {...mobileOnlyStyle}
+      lg={{ w: collapsed ? '95px' : '250px', position: 'static' }}
     >
       <VStack p={5} gap={8} align="stretch" h="full">
         {/* Navigation Links */}
