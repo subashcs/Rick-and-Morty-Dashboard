@@ -1,123 +1,113 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Box, VStack } from '@chakra-ui/react';
 import { AgGridReact } from 'ag-grid-react';
 import {
-  ColDef,
-  GridApi,
   GridReadyEvent,
   IGetRowsParams,
+  ValueGetterParams,
 } from 'ag-grid-community';
 import { useLazyQuery } from '@apollo/client';
-import { GetEpisodesDocument } from '@/gql/graphql';
+import { Episode, GetEpisodesDocument } from '@/gql/graphql';
 import { tableThemeLight, tableThemeDark } from '@/lib/ag-grid/theme';
 import { useColorMode } from '@/components/ui/color-mode';
 import PageSearchBox from '@/components/PageSearchBox';
+import { debounce } from '@/utils/debounce';
+import { toaster } from '@/components/ui/toaster';
 
 const PAGE_SIZE = 20;
 
+const columnDefs = [
+  { field: 'id' },
+  {
+    field: 'name',
+    filter: true,
+    flex: 1,
+  },
+  {
+    field: 'air_date',
+    headerName: 'Air Date',
+    sortable: true,
+    width: 150,
+  },
+  { field: 'episode', headerName: 'Episode Code', width: 130 },
+  {
+    headerName: 'Characters',
+    field: 'characterCount',
+    valueGetter: (params: ValueGetterParams) => params.data?.characters?.length,
+    width: 120,
+  },
+];
+
 const Episodes = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [gridApi, setGridApi] = useState<GridApi<any> | null>(null);
+  const gridRef = useRef<AgGridReact>(null);
   const { colorMode } = useColorMode();
   const tableTheme = colorMode === 'light' ? tableThemeLight : tableThemeDark;
 
-  const [fetchEpisodes] = useLazyQuery(GetEpisodesDocument, {
-    fetchPolicy: 'network-only',
-  });
-
-  const columnDefs = useMemo<ColDef[]>(
-    () => [
-      { field: 'id' },
-      {
-        field: 'name',
-        filter: true,
-        flex: 1,
-      },
-      {
-        field: 'air_date',
-        headerName: 'Air Date',
-        sortable: true,
-        comparator: (valueA, valueB) => valueA - valueB,
-        width: 150,
-      },
-      { field: 'episode', headerName: 'Episode Code', width: 130 },
-      {
-        headerName: 'Characters',
-        field: 'characterCount',
-        valueGetter: (params) => params.data?.characters?.length,
-        width: 120,
-      },
-    ],
-    []
+  const [fetchEpisodes, { loading, error }] = useLazyQuery(
+    GetEpisodesDocument,
+    {
+      fetchPolicy: 'network-only',
+    }
   );
 
   const defaultColDef = useMemo(() => ({ resizable: true }), []);
 
-  // Fetch Data (Once Per Search)
-  const getRowsFunction = useCallback(
-    (
-      searchTerm: string,
-      sortModel?: { colId: string; sort: string | null | undefined }[]
-    ) =>
-      async (params: IGetRowsParams) => {
+  const onGridReady = useCallback((params: GridReadyEvent) => {
+    params.api.setGridOption('datasource', {
+      getRows: async (params: IGetRowsParams) => {
         const { startRow } = params;
         const page = Math.ceil(startRow / PAGE_SIZE) + 1;
 
+        // Reduce the filterModel to match the variables expected by the API
+        const filter: { [key: string]: string } = {};
+        Object.keys(params.filterModel).forEach((key) => {
+          if (params.filterModel[key].filter) {
+            filter[key] = params.filterModel[key].filter;
+          }
+        });
+
+        // NOTE: The rick and morty api does not support server side sorting so leaving this as is
+        // TODO: Add support for server side sorting
+        if (params.sortModel?.length) {
+          //
+        }
+
         try {
           const { data } = await fetchEpisodes({
-            variables: { page, filter: { name: searchTerm || undefined } },
+            variables: { page, filter: filter },
           });
 
-          const episodes = data?.episodes?.results || [];
+          const episodes = (data?.episodes?.results as Episode[]) || [];
           const totalRows = data?.episodes?.info?.count || 0;
-
           params.successCallback(episodes, totalRows);
         } catch (error) {
           console.error('Error fetching data:', error);
           params.failCallback();
         }
       },
-    [fetchEpisodes]
-  );
-
-  // Handle Sorting Locally
-  const onSortChanged = useCallback(() => {
-    if (!gridApi) return;
-
-    const columnState = gridApi.getColumnState(); // Get sorting details
-    const sortModel = columnState
-      .filter((col) => col.sort)
-      .map((col) => ({ colId: col.colId, sort: col.sort })); // Extract sorting details
-
-    console.debug('Updated sort model:', sortModel);
-
-    // Update the data source with the new sorting model
-    gridApi.setGridOption('datasource', {
-      getRows: getRowsFunction(searchTerm, sortModel), // Pass sorting info
     });
-  }, [gridApi, searchTerm, getRowsFunction]);
+  }, []);
 
-  const onGridReady = useCallback(
-    (params: GridReadyEvent) => {
-      setGridApi(params.api);
-      params.api.setGridOption('datasource', {
-        getRows: getRowsFunction(searchTerm),
+  useEffect(() => {
+    if (error) {
+      toaster.create({
+        description: 'Could not load characters',
+        type: 'error',
       });
-    },
-    [getRowsFunction, searchTerm]
-  );
+    }
+  }, [error]);
 
   return (
     <VStack gap={6} align="stretch">
       <PageSearchBox
         title="Episodes"
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          gridApi.setGridOption('datasource', {
-            getRows: getRowsFunction(e.target.value),
+        onChange={debounce((e) => {
+          gridRef.current?.api.setFilterModel({
+            name: {
+              filter: e.target.value,
+            },
           });
-        }}
+        }, 500)}
       />
 
       <Box
@@ -129,15 +119,18 @@ const Episodes = () => {
         _dark={{ bg: 'gray.800' }}
       >
         <AgGridReact
+          ref={gridRef}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           rowModelType="infinite"
           cacheBlockSize={PAGE_SIZE}
           paginationPageSize={PAGE_SIZE}
+          maxConcurrentDatasourceRequests={1}
+          maxBlocksInCache={2}
           onGridReady={onGridReady}
-          onSortChanged={onSortChanged} // Sort locally, no refetch
           animateRows={true}
           theme={tableTheme}
+          loading={loading}
         />
       </Box>
     </VStack>

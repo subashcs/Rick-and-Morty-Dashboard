@@ -78,3 +78,5 @@ To get the project up and running, follow these steps:
    ```
 
 By following these steps, you will be able to set up the project environment and explore the features of the Rick and Morty API Dashboard.
+
+_Note: The Characters view and Episodes view demonstrate different ways of rendering table data using AG Grid. Also, the different ways of using the External search field to filter data_
