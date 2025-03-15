@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { FaUserAlt, FaLock, FaEyeSlash, FaEye } from 'react-icons/fa';
 import { toaster } from '@/components/ui/toaster';
-import { Avatar } from '@/components/ui/avatar';
 import { useAuth } from '../context/AuthContext';
 import { ColorModeButton } from '@/components/ui/color-mode';
 import Sitemark from '@/components/Sitemark';

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { ColorModeButton } from '@/components/ui/color-mode';
 import { FiMenu } from 'react-icons/fi';
 import Sitemark from './Sitemark';

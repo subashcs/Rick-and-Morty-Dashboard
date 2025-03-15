@@ -17,15 +17,14 @@ const PAGE_SIZE = 20;
 
 const Episodes = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [gridApi, setGridApi] = useState<GridApi<any>>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [gridApi, setGridApi] = useState<GridApi<any> | null>(null);
   const { colorMode } = useColorMode();
   const tableTheme = colorMode === 'light' ? tableThemeLight : tableThemeDark;
 
   const [fetchEpisodes] = useLazyQuery(GetEpisodesDocument, {
     fetchPolicy: 'network-only',
   });
-
-  const [rowData, setRowData] = useState([]);
 
   const columnDefs = useMemo<ColDef[]>(
     () => [
@@ -34,7 +33,6 @@ const Episodes = () => {
         field: 'name',
         filter: true,
         flex: 1,
-        sortable: true,
       },
       {
         field: 'air_date',
@@ -49,7 +47,6 @@ const Episodes = () => {
         field: 'characterCount',
         valueGetter: (params) => params.data?.characters?.length,
         width: 120,
-        sortable: true,
       },
     ],
     []
@@ -73,7 +70,6 @@ const Episodes = () => {
           });
 
           const episodes = data?.episodes?.results || [];
-          setRowData(episodes); // Store fetched data in state
           const totalRows = data?.episodes?.info?.count || 0;
 
           params.successCallback(episodes, totalRows);
@@ -101,13 +97,6 @@ const Episodes = () => {
       getRows: getRowsFunction(searchTerm, sortModel), // Pass sorting info
     });
   }, [gridApi, searchTerm, getRowsFunction]);
-
-  // const onSortChanged = useCallback(() => {
-  //   if (!gridApi) return;
-
-  //   console.log('Sort changed, but preventing refetch');
-  //   // gridApi.refreshServerSide();
-  // }, [gridApi]);
 
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
